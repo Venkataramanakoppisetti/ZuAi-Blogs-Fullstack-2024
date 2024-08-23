@@ -4,7 +4,7 @@ const db = require('../database');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const secretKey = "VENKY_SECRET_TOKEN"; 
+const secretKey = "VENKATARAMANA_SECRET_TOKEN"; 
 
 // Register a new user
 router.post("/register", async (request, response) => {

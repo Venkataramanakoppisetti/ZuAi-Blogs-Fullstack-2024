@@ -18,6 +18,6 @@ app.use('/auth', authRouter);
 const PORT = 10000;
 const HOST = '0.0.0.0';
 
-app.listen(PORT,HOST, () => {
-    console.log(`Server is running at http://${HOST}:${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server is running at http://${PORT}`);
 });

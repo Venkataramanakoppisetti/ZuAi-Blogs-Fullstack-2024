@@ -6,24 +6,31 @@ const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const secretKey = "VENKATARAMANA_SECRET_TOKEN"; 
 
-// Register a new user
+// Registering a new user
 router.post("/register", async (request, response) => {
     const { username, password } = request.body;
 
     if (!username || !password) {
         return response.status(400).json({ error: "Username and password are required" });
     }
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    db.run("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPassword], function (error) {
-        if (error) {
-            return response.status(500).json({ error: error.message });
-        }
-        response.status(201).json({ message: "User registered successfully" });
-    });
+    try {
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        db.run("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPassword], function (error) {
+            if (error) {
+                console.error("Error inserting user:", error.message);
+                return response.status(500).json({ error: error.message });
+            }
+            response.status(201).json({ message: "User registered successfully" });
+        });
+    } catch (err) {
+        console.error("Error during registration:", err.message);
+        response.status(500).json({ error: err.message });
+    }
 });
 
-// Login a user
+
+// Loging a user
 router.post("/login", async (request, response) => {
     const { username, password } = request.body;
 

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require('../database');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const secretKey = "VENKATARAMANA_SECRET_TOKEN"; 
 

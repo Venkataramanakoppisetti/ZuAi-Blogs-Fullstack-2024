@@ -17,6 +17,18 @@ db.serialize(() => {
             console.log("Posts Table is created successfully...")
         }
     })
+
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+    )`, (error) => {
+        if (error) {
+            console.log("Error while creating user table", error.message)
+        }else {
+            console.log("Users table created successfully...")
+        }
+    })
 })
 
 module.exports = db;

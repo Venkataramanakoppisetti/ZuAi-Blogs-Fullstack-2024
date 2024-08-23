@@ -8,12 +8,16 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+const authenticate = require('./middlewares/authenticate');
 const postsRouter = require('./routes/posts');
-app.use('/posts', postsRouter);
+const authRouter = require('./routes/auth');
+
+app.use('/posts', authenticate, postsRouter);
+app.use('/auth', authRouter); 
 
 const PORT = 10000;
-const HOST = '0.0.0.0'
+const HOST = '0.0.0.0';
 
-app.listen(PORT,HOST,() => {
-    console.log(`Server is running at http://${HOST}:${PORT}`)
-})
+app.listen(PORT,HOST, () => {
+    console.log(`Server is running at http://${HOST}:${PORT}`);
+});

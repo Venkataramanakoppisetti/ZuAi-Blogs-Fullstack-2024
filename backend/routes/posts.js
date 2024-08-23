@@ -14,7 +14,6 @@ router.get("/", (request, response) => {
         }
         response.json({ posts: resultRows });
     });
-    response.json({message: "This is a blogs list page"})
 });
 
 // GET Single Post by ID

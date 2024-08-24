@@ -31,16 +31,16 @@ router.get("/:id", (request, response) => {
 
 // POST Add a New Post
 router.post("/", (request, response) => {
-    const { post_title, post_content, post_author } = request.body;
-    console.log("Received post data:", { post_title, post_content, post_author }); // Debug log
-    if (!post_title || !post_content || !post_author) {
-        return response.status(400).json({ error: "All fields (post_title, post_content, post_author) are required" });
+    const { title, content, author } = request.body; // Use names matching your schema
+    console.log("Received post data:", { title, content, author }); // Debug log
+    if (!title || !content || !author) {
+        return response.status(400).json({ error: "All fields (title, content, author) are required" });
     }
     const postAddingQuery = `
         INSERT INTO posts (post_title, post_content, post_author) 
         VALUES (?, ?, ?)
     `;
-    db.run(postAddingQuery, [post_title, post_content, post_author], function (error) {
+    db.run(postAddingQuery, [title, content, author], function (error) {
         if (error) {
             return response.status(500).json({ error: error.message });
         }
@@ -51,15 +51,15 @@ router.post("/", (request, response) => {
 // PUT Update a Post by ID
 router.put("/:id", (request, response) => {
     const postId = request.params.id;
-    const { post_title, post_content, post_author } = request.body;
-    console.log("Received update data:", { post_title, post_content, post_author });
+    const { title, content, author } = request.body;
+    console.log("Received update data:", { title, content, author });
 
     const postUpdatingQuery = `
         UPDATE posts 
         SET post_title = ?, post_content = ?, post_author = ?
         WHERE post_id = ?
     `;
-    db.run(postUpdatingQuery, [post_title, post_content, post_author, postId], function (error) {
+    db.run(postUpdatingQuery, [title, content, author, postId], function (error) {
         if (error) {
             return response.status(500).json({ error: error.message });
         } else if (this.changes === 0) {

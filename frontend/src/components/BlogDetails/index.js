@@ -1,32 +1,42 @@
-// components/BlogDetail.js
-import React from 'react';
-import { Link } from 'react-router-dom';
+// components/BlogDetails.js
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import './index.css';
 
-class BlogDetail extends React.Component {
-  state = {
-    post: null,
-    loading: true,
-    error: ''
-  };
+function BlogDetails() {
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const { id } = useParams();  // Access URL parameters
+  const navigate = useNavigate();  // For navigation
 
-  async componentDidMount() {
-    const { id } = this.props.match.params;
-    try {
-      const response = await fetch(`https://zuai-blogs-fullstack-2024-backend.onrender.com/posts/${id}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch post');
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`https://zuai-blogs-fullstack-2024-backend.onrender.com/posts/${id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setPost({
+          title: data.post.post_title,
+          content: data.post.post_content,
+          author: data.post.post_author,
+          created_at: data.post.post_created_at
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error('Fetch error:', error); // Log the error to the console
+        setError(error.message);
+        setLoading(false);
       }
-      const data = await response.json();
-      this.setState({ post: data, loading: false });
-    } catch (error) {
-      this.setState({ error: error.message, loading: false });
-    }
-  }
+    };
 
-  deletePost = async () => {
-    const { id } = this.props.match.params;
+    fetchPost();
+  }, [id]);
+
+  const deletePost = async () => {
     const token = Cookies.get('jwtToken');
 
     try {
@@ -38,38 +48,37 @@ class BlogDetail extends React.Component {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete post');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       alert('Post deleted successfully');
-      this.props.history.push('/posts');
+      navigate('/posts');  // Navigate to posts page
     } catch (error) {
+      console.error('Delete error:', error); // Log the error to the console
       alert(error.message);
     }
   };
 
-  render() {
-    const { post, loading, error } = this.state;
-
-    if (loading) {
-      return <div className="loading">Loading...</div>;
-    }
-
-    if (error) {
-      return <div className="error">{error}</div>;
-    }
-
-    return (
-      <div className="blog-detail">
-        <h2>{post.title}</h2>
-        <p>{post.content}</p>
-        <Link to="/posts" className="btn btn-secondary">Back to Posts</Link>
-        {Cookies.get('jwtToken') && (
-          <button onClick={this.deletePost} className="btn btn-danger mt-3">Delete Post</button>
-        )}
-      </div>
-    );
+  if (loading) {
+    return <div className="loading">Loading...</div>;
   }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
+  return (
+    <div className="blog-detail">
+      <h2>{post.title}</h2>
+      <p>{post.content}</p>
+      <p><strong>Author:</strong> {post.author}</p>
+      <p><strong>Created At:</strong> {new Date(post.created_at).toLocaleDateString()}</p>
+      <Link to="/posts" className="btn btn-secondary">Back to Posts</Link>
+      {Cookies.get('jwtToken') && (
+        <button onClick={deletePost} className="btn btn-danger mt-3">Delete Post</button>
+      )}
+    </div>
+  );
 }
 
-export default BlogDetail;
+export default BlogDetails;

@@ -1,0 +1,39 @@
+/* components/Header.css */
+.header {
+  margin-bottom: 20px;
+}
+
+.navbar {
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Ensure vertical alignment */
+  height: 80px;
+  box-shadow: 0px 0px 1px 1px rgb(164, 18, 18);
+  padding: 0 20px; /* Add padding to the navbar for spacing */
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar-nav {
+  display: flex;
+  flex-direction: row; /* Make sure items are in a row */
+}
+
+.nav-item {
+  margin-left: 20px; /* Add space between nav items */
+}
+
+.nav-link {
+  margin-right: 10px;
+  font-size: 18px;
+  color: #343a40;
+}
+
+.nav-link:hover {
+  color: #007bff;
+  text-decoration: underline;
+}

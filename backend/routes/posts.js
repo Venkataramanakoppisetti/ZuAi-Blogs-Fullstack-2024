@@ -33,12 +33,9 @@ router.get("/:id", (request, response) => {
 router.post("/", (request, response) => {
     const { post_title, post_content, post_author } = request.body;
     console.log("Received post data:", { post_title, post_content, post_author }); // Debug log
-
-    // Check if all required fields are provided
     if (!post_title || !post_content || !post_author) {
         return response.status(400).json({ error: "All fields (post_title, post_content, post_author) are required" });
     }
-
     const postAddingQuery = `
         INSERT INTO posts (post_title, post_content, post_author) 
         VALUES (?, ?, ?)
@@ -55,7 +52,7 @@ router.post("/", (request, response) => {
 router.put("/:id", (request, response) => {
     const postId = request.params.id;
     const { post_title, post_content, post_author } = request.body;
-    console.log("Received update data:", { post_title, post_content, post_author }); // Debug log
+    console.log("Received update data:", { post_title, post_content, post_author });
 
     const postUpdatingQuery = `
         UPDATE posts 

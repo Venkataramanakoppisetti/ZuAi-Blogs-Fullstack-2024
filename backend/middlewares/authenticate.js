@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secretKey = "VENKY_SECRET_TOKEN";
+const secretKey = "VENKATARAMANA_SECRET_TOKEN";
 
 function authenticateToken(request, response, next) {
     const authHeader = request.headers['authorization'];

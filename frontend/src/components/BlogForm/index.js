@@ -9,7 +9,7 @@ class BlogForm extends Component {
     this.state = {
       title: '',
       content: '',
-      author: '', // Add author state
+      author: '', 
     };
   }
 
@@ -19,20 +19,21 @@ class BlogForm extends Component {
 
     // Retrieve the token from cookies
     const token = Cookies.get('jwtToken');
+    console.log('Retrieved Token:', token); // Check if the token is retrieved correctly
 
     fetch('https://zuai-blogs-fullstack-2024-backend.onrender.com/posts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, // Add the token here
+        'Authorization': `Bearer ${token}`, // Ensure token is correctly added
       },
-      body: JSON.stringify({ title, content, author }), // Include author in the request body
+      body: JSON.stringify({ title, content, author }),
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.success) { 
+        if (data.postID) { // Check for postID in response
           console.log('Success:', data);
-          this.props.navigate('/'); // Navigate back to the home page after successful submission
+          this.props.navigate('/'); 
         } else {
           console.error('Error:', data.error || 'Failed to create post');
         }

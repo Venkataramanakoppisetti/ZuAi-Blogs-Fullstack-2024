@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Footer from '../Footer';
 import './index.css';
+import Cookies from 'js-cookie'; // Ensure you have js-cookie installed
 
 class BlogList extends React.Component {
   state = {
@@ -11,12 +13,22 @@ class BlogList extends React.Component {
 
   async componentDidMount() {
     try {
-      const response = await fetch('https://zuai-blogs-fullstack-2024-backend.onrender.com/posts');
+      const token = Cookies.get('jwtToken'); // Retrieve token from cookies
+      const response = await fetch('https://zuai-blogs-fullstack-2024-backend.onrender.com/posts', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include' 
+      });
+
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
+
       const data = await response.json();
-      this.setState({ posts: data, loading: false });
+      this.setState({ posts: data.posts, loading: false });
     } catch (error) {
       this.setState({ error: error.message, loading: false });
     }
@@ -43,19 +55,22 @@ class BlogList extends React.Component {
     }
 
     return (
-      <div className="blog-list">
-        <h2>Blog Posts</h2>
-        <Link to="/posts/new" className="btn btn-primary">Add New Post</Link>
-        <ul className="list-group">
-          {posts.map(post => (
-            <li key={post.id} className="list-group-item">
-              <Link to={`/posts/${post.id}`} className="post-link">
-                {post.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <>
+        <div className="blog-list">
+          <h2>Blog Posts</h2>
+          <Link to="/posts/new" className="btn btn-primary">Add New Post</Link>
+          <ul className="list-group">
+            {posts.map(post => (
+              <li key={post.post_id} className="list-group-item">
+                <Link to={`/posts/${post.post_id}`} className="post-link">
+                  {post.post_title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Footer />
+      </>
     );
   }
 }
